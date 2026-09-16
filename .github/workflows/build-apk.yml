@@ -1,14 +1,19 @@
-name: Build Luxio APK
+      - name: Corrigir compatibilidade Java/Kotlin
+        working-directory: luxio-build
+        run: |
+          cat >> app/build.gradle.kts <<'EOF'
 
-on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
+          android {
+              compileOptions {
+                  sourceCompatibility = JavaVersion.VERSION_17
+                  targetCompatibility = JavaVersion.VERSION_17
+              }
+          }
+          EOF
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+      - name: Compilar Luxio
+        working-directory: luxio-build
+        run: gradle :app:assembleDebug --no-daemon
 
     steps:
       - name: Baixar projeto
